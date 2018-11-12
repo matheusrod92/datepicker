@@ -5,7 +5,7 @@
  * Copyright 2014-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-11-12T03:22:37.417Z
+ * Date: 2018-11-12T03:42:59.954Z
  */
 
 (function (global, factory) {
@@ -1066,9 +1066,12 @@
         }
 
         if (customClasses.length) {
-          var dateExists = customClasses.find(function (customDate) {
-            return isDateEqual(date, customDate.date);
+          // eslint-disable-next-line
+          var dateExists = customClasses.find(function (_ref) {
+            var customDate = _ref.date;
+            return isDateEqual(date, customDate);
           });
+
           if (dateExists && dateExists.customClass) newClass = dateExists.customClass;
         }
 
