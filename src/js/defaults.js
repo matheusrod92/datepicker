@@ -116,8 +116,8 @@ export default {
   // Filter each date item (return `false` to disable a date item)
   filter: null,
 
-  // Add custom class for each customDate (return null to add nothing)
-  customDate: null,
+  // Add custom classes using array of objects { date: new Date(), customClass: 'string' }
+  customClasses: [],
 
   // Event shortcuts
   show: null,

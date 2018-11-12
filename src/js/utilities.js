@@ -45,6 +45,14 @@ export function getMinDay(year, month, day) {
   return Math.min(day, getDaysInMonth(year, month));
 }
 
+export function isDateEqual(firstDate, secondDate) {
+  return (
+    (firstDate.getFullYear() === secondDate.getFullYear())
+    && (firstDate.getMonth() === secondDate.getMonth())
+    && (firstDate.getDate() === secondDate.getDate())
+  );
+}
+
 const formatParts = /(y|m|d)+/g;
 
 export function parseFormat(format) {

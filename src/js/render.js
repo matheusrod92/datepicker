@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { getDaysInMonth } from './utilities';
+import { getDaysInMonth, isDateEqual } from './utilities';
 
 export default {
   render() {
@@ -157,7 +157,7 @@ export default {
     const {
       disabledClass,
       filter,
-      customDate,
+      customClasses,
       months,
       weekStart,
       yearSuffix,
@@ -298,7 +298,7 @@ export default {
     for (i = 1; i <= length; i += 1) {
       const date = new Date(viewYear, viewMonth, i);
       let disabled = false;
-      let customClass = '';
+      let newClass = '';
 
       if (startDate) {
         disabled = date.getTime() < startDate.getTime();
@@ -312,8 +312,9 @@ export default {
         disabled = filter.call($element, date, 'day') === false;
       }
 
-      if (customDate) {
-        customClass = customDate.call($element, date, 'day');
+      if (customClasses.length) {
+        const dateExists = customClasses.find(customDate => isDateEqual(date, customDate.date));
+        if (dateExists && dateExists.customClass) newClass = dateExists.customClass;
       }
 
       const picked = viewYear === year && viewMonth === month && i === day;
@@ -322,7 +323,7 @@ export default {
       items.push(this.createItem({
         disabled,
         picked,
-        customClass,
+        customClass: newClass,
         highlighted: (
           viewYear === thisYear
           && viewMonth === thisMonth

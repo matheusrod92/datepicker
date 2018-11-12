@@ -5,7 +5,7 @@
  * Copyright 2014-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-11-12T02:47:49.401Z
+ * Date: 2018-11-12T03:22:37.417Z
  */
 
 import $ from 'jquery';
@@ -100,8 +100,8 @@ var DEFAULTS = {
   // Filter each date item (return `false` to disable a date item)
   filter: null,
 
-  // Add custom class for each customDate (return null to add nothing)
-  customDate: null,
+  // Add custom classes using array of objects { date: new Date(), customClass: 'string' }
+  customClasses: [],
 
   // Event shortcuts
   show: null,
@@ -179,6 +179,10 @@ function getDaysInMonth(year, month) {
 
 function getMinDay(year, month, day) {
   return Math.min(day, getDaysInMonth(year, month));
+}
+
+function isDateEqual(firstDate, secondDate) {
+  return firstDate.getFullYear() === secondDate.getFullYear() && firstDate.getMonth() === secondDate.getMonth() && firstDate.getDate() === secondDate.getDate();
 }
 
 var formatParts = /(y|m|d)+/g;
@@ -898,6 +902,8 @@ var render = {
     this.$months.html(items.join(''));
   },
   renderDays: function renderDays() {
+    var _this2 = this;
+
     var $element = this.$element,
         options = this.options,
         startDate = this.startDate,
@@ -906,7 +912,7 @@ var render = {
         currentDate = this.date;
     var disabledClass = options.disabledClass,
         filter = options.filter,
-        customDate = options.customDate,
+        customClasses = options.customClasses,
         months = options.months,
         weekStart = options.weekStart,
         yearSuffix = options.yearSuffix;
@@ -1036,38 +1042,45 @@ var render = {
 
     var items = [];
 
-    for (i = 1; i <= length; i += 1) {
-      var _date = new Date(viewYear, viewMonth, i);
-      var _disabled2 = false;
-      var customClass = '';
+    var _loop = function _loop() {
+      var date = new Date(viewYear, viewMonth, i);
+      var disabled = false;
+      var newClass = '';
 
       if (startDate) {
-        _disabled2 = _date.getTime() < startDate.getTime();
+        disabled = date.getTime() < startDate.getTime();
       }
 
-      if (!_disabled2 && endDate) {
-        _disabled2 = _date.getTime() > endDate.getTime();
+      if (!disabled && endDate) {
+        disabled = date.getTime() > endDate.getTime();
       }
 
-      if (!_disabled2 && filter) {
-        _disabled2 = filter.call($element, _date, 'day') === false;
+      if (!disabled && filter) {
+        disabled = filter.call($element, date, 'day') === false;
       }
 
-      if (customDate) {
-        customClass = customDate.call($element, _date, 'day');
+      if (customClasses.length) {
+        var dateExists = customClasses.find(function (customDate) {
+          return isDateEqual(date, customDate.date);
+        });
+        if (dateExists && dateExists.customClass) newClass = dateExists.customClass;
       }
 
-      var _picked = viewYear === year && viewMonth === month && i === day;
-      var view = _picked ? 'day picked' : 'day';
+      var picked = viewYear === year && viewMonth === month && i === day;
+      var view = picked ? 'day picked' : 'day';
 
-      items.push(this.createItem({
-        disabled: _disabled2,
-        picked: _picked,
-        customClass: customClass,
-        highlighted: viewYear === thisYear && viewMonth === thisMonth && _date.getDate() === thisDay,
+      items.push(_this2.createItem({
+        disabled: disabled,
+        picked: picked,
+        customClass: newClass,
+        highlighted: viewYear === thisYear && viewMonth === thisMonth && date.getDate() === thisDay,
         text: i,
-        view: _disabled2 ? 'day disabled' : view
+        view: disabled ? 'day disabled' : view
       }));
+    };
+
+    for (i = 1; i <= length; i += 1) {
+      _loop();
     }
 
     // Render days picker
