@@ -5,7 +5,7 @@
  * Copyright 2014-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-11-12T02:46:33.679Z
+ * Date: 2018-11-12T02:47:49.401Z
  */
 
 'use strict';
