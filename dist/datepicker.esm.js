@@ -5,7 +5,7 @@
  * Copyright 2014-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-11-12T03:42:59.954Z
+ * Date: 2018-11-12T03:46:37.103Z
  */
 
 import $ from 'jquery';
@@ -1063,7 +1063,7 @@ var render = {
         // eslint-disable-next-line
         var dateExists = customClasses.find(function (_ref) {
           var customDate = _ref.date;
-          return isDateEqual(date, customDate);
+          return isDateEqual(date, new Date(customDate));
         });
 
         if (dateExists && dateExists.customClass) newClass = dateExists.customClass;

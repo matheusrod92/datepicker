@@ -314,7 +314,7 @@ export default {
 
       if (customClasses.length) {
         // eslint-disable-next-line
-        const dateExists = customClasses.find(({ date: customDate }) => isDateEqual(date, customDate));
+        const dateExists = customClasses.find(({ date: customDate }) => isDateEqual(date, new Date(customDate)));
 
         if (dateExists && dateExists.customClass) newClass = dateExists.customClass;
       }
