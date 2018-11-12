@@ -157,6 +157,7 @@ export default {
     const {
       disabledClass,
       filter,
+      customDate,
       months,
       weekStart,
       yearSuffix,
@@ -297,6 +298,7 @@ export default {
     for (i = 1; i <= length; i += 1) {
       const date = new Date(viewYear, viewMonth, i);
       let disabled = false;
+      let customClass = '';
 
       if (startDate) {
         disabled = date.getTime() < startDate.getTime();
@@ -310,12 +312,17 @@ export default {
         disabled = filter.call($element, date, 'day') === false;
       }
 
+      if (customDate) {
+        customClass = customDate.call($element, date, 'day');
+      }
+
       const picked = viewYear === year && viewMonth === month && i === day;
       const view = picked ? 'day picked' : 'day';
 
       items.push(this.createItem({
         disabled,
         picked,
+        customClass,
         highlighted: (
           viewYear === thisYear
           && viewMonth === thisMonth

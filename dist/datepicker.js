@@ -5,7 +5,7 @@
  * Copyright 2014-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-08-05T03:02:19.812Z
+ * Date: 2018-11-12T02:46:33.679Z
  */
 
 (function (global, factory) {
@@ -105,6 +105,9 @@
 
     // Filter each date item (return `false` to disable a date item)
     filter: null,
+
+    // Add custom class for each customDate (return null to add nothing)
+    customDate: null,
 
     // Event shortcuts
     show: null,
@@ -909,6 +912,7 @@
           currentDate = this.date;
       var disabledClass = options.disabledClass,
           filter = options.filter,
+          customDate = options.customDate,
           months = options.months,
           weekStart = options.weekStart,
           yearSuffix = options.yearSuffix;
@@ -1041,6 +1045,7 @@
       for (i = 1; i <= length; i += 1) {
         var _date = new Date(viewYear, viewMonth, i);
         var _disabled2 = false;
+        var customClass = '';
 
         if (startDate) {
           _disabled2 = _date.getTime() < startDate.getTime();
@@ -1054,12 +1059,17 @@
           _disabled2 = filter.call($element, _date, 'day') === false;
         }
 
+        if (customDate) {
+          customClass = customDate.call($element, _date, 'day');
+        }
+
         var _picked = viewYear === year && viewMonth === month && i === day;
         var view = _picked ? 'day picked' : 'day';
 
         items.push(this.createItem({
           disabled: _disabled2,
           picked: _picked,
+          customClass: customClass,
           highlighted: viewYear === thisYear && viewMonth === thisMonth && _date.getDate() === thisDay,
           text: i,
           view: _disabled2 ? 'day disabled' : view
@@ -1420,6 +1430,7 @@
           muted: false,
           picked: false,
           disabled: false,
+          customClass: '',
           highlighted: false
         };
         var classes = [];
@@ -1440,6 +1451,10 @@
 
         if (item.disabled) {
           classes.push(options.disabledClass);
+        }
+
+        if (item.customClass) {
+          classes.push(String(item.customClass));
         }
 
         return '<' + itemTag + ' class="' + classes.join(' ') + '" data-view="' + item.view + '">' + item.text + '</' + itemTag + '>';

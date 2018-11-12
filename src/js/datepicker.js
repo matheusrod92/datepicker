@@ -337,6 +337,7 @@ class Datepicker {
       muted: false,
       picked: false,
       disabled: false,
+      customClass: '',
       highlighted: false,
     };
     const classes = [];
@@ -357,6 +358,10 @@ class Datepicker {
 
     if (item.disabled) {
       classes.push(options.disabledClass);
+    }
+
+    if (item.customClass) {
+      classes.push(String(item.customClass));
     }
 
     return (`<${itemTag} class="${classes.join(' ')}" data-view="${item.view}">${item.text}</${itemTag}>`);
